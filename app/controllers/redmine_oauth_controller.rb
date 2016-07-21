@@ -4,21 +4,21 @@ require 'json'
 class RedmineOauthController < AccountController
   include Helpers::MailHelper
   include Helpers::Checker
-  def oauth_google
-    if Setting.plugin_redmine_omniauth_google[:oauth_authentification]
+  def oauth_gitlab
+    if Setting.plugin_redmine_omniauth_gitlab[:oauth_authentification]
       session[:back_url] = params[:back_url]
-      redirect_to oauth_client.auth_code.authorize_url(:redirect_uri => oauth_google_callback_url, :scope => scopes)
+      redirect_to oauth_client.auth_code.authorize_url(:redirect_uri => oauth_gitlab_callback_url)
     else
       password_authentication
     end
   end
 
-  def oauth_google_callback
+  def oauth_gitlab_callback
     if params[:error]
       flash[:error] = l(:notice_access_denied)
       redirect_to signin_path
     else
-      token = oauth_client.auth_code.get_token(params[:code], :redirect_uri => oauth_google_callback_url)
+      token = oauth_client.auth_code.get_token(params[:code], :redirect_uri => oauth_gitlab_callback_url)
       result = token.get('https://www.googleapis.com/oauth2/v1/userinfo')
       info = JSON.parse(result.body)
       if info && info["verified_email"]
@@ -29,7 +29,7 @@ class RedmineOauthController < AccountController
           redirect_to signin_path
         end
       else
-        flash[:error] = l(:notice_unable_to_obtain_google_credentials)
+        flash[:error] = l(:notice_unable_to_obtain_gitlab_credentials)
         redirect_to signin_path
       end
     end
@@ -84,16 +84,12 @@ class RedmineOauthController < AccountController
 
   def oauth_client
     @client ||= OAuth2::Client.new(settings[:client_id], settings[:client_secret],
-      :site => 'https://accounts.google.com',
-      :authorize_url => '/o/oauth2/auth',
-      :token_url => '/o/oauth2/token')
+      :site => settings[:gitlab_url],
+      :authorize_url => '/oauth/authorize',
+      :token_url => '/oauth/token')
   end
 
   def settings
-    @settings ||= Setting.plugin_redmine_omniauth_google
-  end
-
-  def scopes
-    'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+    @settings ||= Setting.plugin_redmine_omniauth_gitlab
   end
 end
