@@ -19,9 +19,10 @@ class RedmineOauthController < AccountController
       redirect_to signin_path
     else
       token = oauth_client.auth_code.get_token(params[:code], :redirect_uri => oauth_gitlab_callback_url)
-      result = token.get('https://www.googleapis.com/oauth2/v1/userinfo')
+      result = token.get('/api/v3/user')
       info = JSON.parse(result.body)
-      if info && info["verified_email"]
+#      if info && info["verified_email"]
+      if info
         if allowed_domain_for?(info["email"])
           try_to_login info
         else
