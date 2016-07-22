@@ -1,4 +1,8 @@
 <p>
+  <label>GitLab URL:</label>
+  <%= url_field_tag 'settings[gitlab_url]', @settings[:gitlab_url] %>
+</p>
+<p>
   <label>Client ID:</label>
   <%= text_field_tag 'settings[client_id]', @settings[:client_id] %>
 </p>
