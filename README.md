@@ -1,6 +1,6 @@
 ## Redmine omniauth GitLab
 
-This plugin is used to authenticate Redmine users using GitLab's OAuth2 provider.
+This plugin is used to authenticate Redmine users using GitLab's OAuth2 provider. Original credit for this goes to twinslash/redmine_omniauth_google I just tweaked it to work with GitLab as an authentication service.
 
 ### Installation:
 
