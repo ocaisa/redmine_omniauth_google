@@ -39,7 +39,7 @@ To authenticate via GitLab you must first register your redmine instance with Gi
  
 Users can now to use their GitLab Account to log in to your instance of Redmine.
 
-Additionaly
+Additionally
 * Setup value Autologin in Settings on tab Authentification
 
 ### Other options
